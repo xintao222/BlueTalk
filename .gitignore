@@ -4,3 +4,12 @@
 *.jar
 *.war
 *.ear
+*.apk
+*.cache
+*.ap_
+*.dex
+
+# Folder #
+/bin/res
+/bin/classes
+/bin/dexedLibs

@@ -2,6 +2,8 @@ package application.bluetalk;
 
 import java.util.Locale;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,8 +16,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MenuActivity extends FragmentActivity {
 
@@ -110,7 +115,9 @@ public class MenuActivity extends FragmentActivity {
 		 * fragment.
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
-
+		private ImageView m_button;
+		private AlertDialog m_dialog;
+		
 		public DummySectionFragment() {
 		}
 
@@ -123,7 +130,37 @@ public class MenuActivity extends FragmentActivity {
 					.findViewById(R.id.section_label);
 			dummyTextView.setText(Integer.toString(getArguments().getInt(
 					ARG_SECTION_NUMBER)));
+			if(getArguments().getInt(ARG_SECTION_NUMBER) == 1){
+				return filltestView(inflater, container);
+			}
 			return rootView;
+		}
+		
+		/**
+		 * 
+		 * @param inflater
+		 * @param container
+		 * @return
+		 */
+		public View filltestView(LayoutInflater inflater, ViewGroup container){
+			View testView = inflater.inflate(R.layout.fragment_menu_dummy,
+					container, false);
+			m_button = (ImageView) testView.findViewById(R.id.bluetooth_send_button);
+			m_button.setVisibility(View.VISIBLE);
+			m_button.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					blueclick();
+				}
+			});
+			return testView;
+		}
+		
+		private void blueclick(){
+			m_dialog = new AlertDialog.Builder(super.getActivity()).create();
+			m_dialog.setTitle("Valid Test");
+			m_dialog.setMessage("Le bouton marche! :D");
+			m_dialog.show();
 		}
 	}
 
