@@ -1,4 +1,5 @@
 *.class
+project.properties
 
 # Package Files #
 *.jar
@@ -8,6 +9,7 @@
 *.cache
 *.ap_
 *.dex
+
 
 # Folder #
 /bin/res
