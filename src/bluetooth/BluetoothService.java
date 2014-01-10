@@ -1,9 +1,12 @@
 package bluetooth;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 
 public class BluetoothService {
 
+	
 	BluetoothAdapter blueAdapter = BluetoothAdapter.getDefaultAdapter();
 	/**
 	 * Constructor for BluetoothService
@@ -25,6 +28,15 @@ public class BluetoothService {
 	public boolean testBluetoothPresence(){
 		if (blueAdapter == null) {
 		    return false;
+		}else {
+			return true;
+		}
+	}
+	
+	public boolean activationBluetooth(){
+		if (!blueAdapter.isEnabled()) {
+		    blueAdapter.enable();
+		    return true;
 		}else {
 			return true;
 		}

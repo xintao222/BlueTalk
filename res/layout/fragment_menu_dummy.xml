@@ -12,15 +12,22 @@
         android:id="@+id/section_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    
-    <ImageView 
+
+    <ImageView
         android:id="@+id/bluetooth_send_button"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="invisible"
-		android:src="@drawable/bluetooth_button"
-		android:onClick="@drawable/bluetooth_button_enabled"/>
+        android:src="@drawable/bluetooth_button"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/active_bluetooth"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/bluetooth_send_button"
+        android:src="@drawable/activation_bluetooth"
+        android:visibility="invisible" />
 
 </RelativeLayout>

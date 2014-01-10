@@ -116,8 +116,10 @@ public class MenuActivity extends FragmentActivity {
 		 * fragment.
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
-		private ImageView m_button;
-		private AlertDialog m_dialog;
+		private ImageView m_buttonTestBluetooth;
+		private ImageView m_buttonActiveBluetooth;
+		private AlertDialog m_dialogForTest;
+		private AlertDialog m_dialogForActive;
 		private BluetoothService blueService;
 
 		public DummySectionFragment() {
@@ -147,31 +149,56 @@ public class MenuActivity extends FragmentActivity {
 		public View filltestView(LayoutInflater inflater, ViewGroup container) {
 			View testView = inflater.inflate(R.layout.fragment_menu_dummy,
 					container, false);
-			m_button = (ImageView) testView
+			blueService = new BluetoothService();
+			m_buttonTestBluetooth = (ImageView) testView
 					.findViewById(R.id.bluetooth_send_button);
-			m_button.setVisibility(View.VISIBLE);
-			m_button.setOnClickListener(new OnClickListener() {
+			m_buttonActiveBluetooth = (ImageView) testView.findViewById(R.id.active_bluetooth);
+			m_buttonTestBluetooth.setVisibility(View.VISIBLE);
+			m_buttonActiveBluetooth.setVisibility(View.VISIBLE);
+			m_buttonTestBluetooth.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					blueclick();
+					validBluetooth();
+				}
+			});
+			m_buttonActiveBluetooth.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					activeBluetooth();
 				}
 			});
 			return testView;
 		}
 
-		private void blueclick() {
-			blueService = new BluetoothService();
-			m_dialog = new AlertDialog.Builder(super.getActivity()).create();
+		private void validBluetooth() {
+			m_dialogForTest = new AlertDialog.Builder(super.getActivity())
+					.create();
+			m_dialogForTest.setTitle("Validation Bluetooth Test");
 
 			if (blueService.testBluetoothPresence() != false) {
-				m_dialog.setTitle("Validation Bluetooth Test");
-				m_dialog.setMessage("L'appareil possède un module Bluetooth");
-				m_dialog.show();
+				m_dialogForTest
+						.setMessage("L'appareil possède un module Bluetooth");
+				m_dialogForTest.show();
 			} else {
-				m_dialog.setTitle("Validation Bluetooth Test");
-				m_dialog.setMessage("L'appareil ne possède pas de module Bluetooth");
-				m_dialog.show();
+				m_dialogForTest
+						.setMessage("L'appareil ne possède pas de module Bluetooth");
+				m_dialogForTest.show();
+			}
+		}
+
+		private void activeBluetooth() {
+			m_dialogForActive = new AlertDialog.Builder(super.getActivity())
+					.create();
+			m_dialogForActive.setTitle("Validation Bluetooth Test");
+
+			if (blueService.activationBluetooth() != false) {
+				m_dialogForActive
+						.setMessage("Le Bluetooth est activé");
+				m_dialogForActive.show();
 			}
 		}
 	}
+
 }
