@@ -2,26 +2,22 @@ package application.bluetalk;
 
 import java.util.Locale;
 
-import bluetooth.BluetoothService;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+import bluetooth.BluetoothService;
 
 public class MenuActivity extends FragmentActivity {
 
@@ -192,11 +188,10 @@ public class MenuActivity extends FragmentActivity {
 			m_dialogForActive = new AlertDialog.Builder(super.getActivity())
 					.create();
 			m_dialogForActive.setTitle("Validation Bluetooth Test");
-
-			if (blueService.activationBluetooth() != false) {
-				m_dialogForActive
-						.setMessage("Le Bluetooth est activé");
-				m_dialogForActive.show();
+			blueService = new BluetoothService();
+			if (!blueService.getAdapter().isEnabled()) {
+			    Intent enableBtIntent = new Intent(blueService.getAdapter().ACTION_REQUEST_ENABLE);
+			    startActivityForResult(enableBtIntent, 1);
 			}
 		}
 	}

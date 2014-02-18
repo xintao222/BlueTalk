@@ -32,13 +32,4 @@ public class BluetoothService {
 			return true;
 		}
 	}
-	
-	public boolean activationBluetooth(){
-		if (!blueAdapter.isEnabled()) {
-		    blueAdapter.enable();
-		    return true;
-		}else {
-			return true;
-		}
-	}
 }
