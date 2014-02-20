@@ -3,7 +3,11 @@ package application.bluetalk;
 import java.util.Locale;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +44,8 @@ public class MenuActivity extends FragmentActivity {
 	 */
 	ViewPager mViewPager;
 	private BluetoothService blueService;
+	private BroadcastReceiver receiver;
+    ArrayAdapter<String> mArrayAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +85,30 @@ public class MenuActivity extends FragmentActivity {
 				startActivityForResult(enableBtIntent, 1);
 			}
 			break;
+		case R.id.action_detection:
+			receiver = new BroadcastReceiver() {
+			    public void onReceive(Context context, Intent intent) {
+			        String action = intent.getAction();
+			        // Quand la recherche trouve un terminal
+			        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+			            // On récupère l'object BluetoothDevice depuis l'Intent
+			            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+						// On ajoute le nom et l'adresse du périphérique dans un ArrayAdapter (par exemple pour l'afficher dans une ListView)
+			            mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+			        }
+			    }
+			};
+			// Inscrire le BroadcastReceiver
+			IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+			registerReceiver(receiver, filter); // N'oubliez pas de le désinscrire lors du OnDestroy() !
+			break;
 		}
 		return true;
+	}
+
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(receiver);
 	}
 
 	/**
