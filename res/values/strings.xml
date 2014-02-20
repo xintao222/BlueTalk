@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">BlueTalk</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Activer Bluetooth</string>
     <string name="title_section1">SECTION DE TEST</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
