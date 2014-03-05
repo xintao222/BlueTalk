@@ -1,8 +1,10 @@
 package application.bluetalk;
 
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Set;
 
-import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,16 +18,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import bluetooth.BluetoothService;
+import bluetooth.MyBroadcastReceiver;
 
 public class MenuActivity extends FragmentActivity {
 
@@ -45,7 +47,7 @@ public class MenuActivity extends FragmentActivity {
 	ViewPager mViewPager;
 	private BluetoothService blueService;
 	private BroadcastReceiver receiver;
-    ArrayAdapter<String> mArrayAdapter;
+	private BluetoothAdapter bAdapt;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,21 +88,20 @@ public class MenuActivity extends FragmentActivity {
 			}
 			break;
 		case R.id.action_detection:
-			receiver = new BroadcastReceiver() {
-			    public void onReceive(Context context, Intent intent) {
-			        String action = intent.getAction();
-			        // Quand la recherche trouve un terminal
-			        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-			            // On récupère l'object BluetoothDevice depuis l'Intent
-			            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-						// On ajoute le nom et l'adresse du périphérique dans un ArrayAdapter (par exemple pour l'afficher dans une ListView)
-			            mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-			        }
-			    }
-			};
-			// Inscrire le BroadcastReceiver
+			//blueService = new BluetoothService();
+			bAdapt = BluetoothAdapter.getDefaultAdapter();
+			//Set<BluetoothDevice> paireDevices = bAdapt.getBondedDevices();
+			if(bAdapt.isDiscovering()){
+				bAdapt.cancelDiscovery();
+				unregisterReceiver(receiver);
+			}
+			bAdapt.startDiscovery();
+			receiver = new MyBroadcastReceiver();
 			IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-			registerReceiver(receiver, filter); // N'oubliez pas de le désinscrire lors du OnDestroy() !
+			this.registerReceiver(receiver, filter);
+			ListView lv = (ListView)findViewById(R.id.listDevice);
+			lv.setAdapter(new ArrayAdapter<String>(this, android.R.id.list, new ArrayList<String>()));
+			lv.setAdapter(new ArrayAdapter<String>(this, android.R.id.list, receiver.getResultData()));
 			break;
 		}
 		return true;
@@ -108,6 +109,7 @@ public class MenuActivity extends FragmentActivity {
 
 	@Override
 	protected void onDestroy() {
+		bAdapt.cancelDiscovery();
 		unregisterReceiver(receiver);
 	}
 
@@ -212,18 +214,6 @@ public class MenuActivity extends FragmentActivity {
 //			});
 			return testView;
 		}
-
-//		private void activeBluetooth() {
-//			blueService = new BluetoothService();
-//			if (!blueService.getAdapter().isEnabled()) {
-//				Intent enableBtIntent = new Intent(
-//						blueService.getAdapter().ACTION_REQUEST_ENABLE);
-//				startActivityForResult(enableBtIntent, 1);
-//			}
-//		}
-
-
-
 	}
 
 }
